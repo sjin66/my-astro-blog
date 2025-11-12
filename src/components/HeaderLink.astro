@@ -4,14 +4,20 @@ import type { HTMLAttributes } from 'astro/types';
 type Props = HTMLAttributes<'a'>;
 
 const { href, class: className, ...props } = Astro.props;
-const pathname = Astro.url.pathname.replace(import.meta.env.BASE_URL, '');
-const subpath = pathname.match(/[^\/]+/g);
-const isActive = href === pathname || href === '/' + (subpath?.[0] || '');
+const base = import.meta.env.BASE_URL;
+const currentPath = Astro.url.pathname;
+
+// 构建完整的 href（包含基础路径）
+const fullHref = href === '/' ? base : `${base}${href}`;
+
+// 检查激活状态
+const isActive = currentPath === fullHref || currentPath.startsWith(`${fullHref}/`);
 ---
 
-<a href={href} class:list={[className, { active: isActive }]} {...props}>
+<a href={fullHref} class:list={[className, { active: isActive }]} {...props}>
 	<slot />
 </a>
+
 <style>
 	a {
 		display: inline-block;
