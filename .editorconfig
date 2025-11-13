@@ -1,0 +1,31 @@
+# EditorConfig: https://editorconfig.org
+
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Markdown 文件
+[*.md]
+trim_trailing_whitespace = false  # 允许行尾空格用于换行
+max_line_length = 80
+
+# Git 忽略文件
+[.gitignore]
+indent_size = 2
+
+# 包管理文件
+[package.json]
+indent_size = 2
+
+[package-lock.json]
+indent_size = 2
+
+# 图片和二进制文件（不处理）
+[*.{jpg,jpeg,png,gif,ico,webp,mp4,webm,ogg,mp3,wav,flac,aac,woff,woff2,ttf,eot,otf}]
+charset = unset
