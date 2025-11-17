@@ -2,6 +2,8 @@
 
 import * as React from 'react';
 
+import selfie from '@/assets/self.jpeg';
+import { ModeToggle } from '@/components/ModeToggle';
 import {
   Sidebar,
   SidebarContent,
@@ -69,11 +71,13 @@ const SVGLinkIcon = ({ href, svgPath, viewBox = '0 0 512 512', label }: SVGLinkI
 function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader></SidebarHeader>
+      <SidebarHeader>
+        <ModeToggle />
+      </SidebarHeader>
       <SidebarContent>
         <div className="flex flex-col items-center justify-center mt-30 ">
           <img
-            src="/src/assets/self.jpeg"
+            src={selfie.src}
             alt="Selfie"
             className="h-16 w-16 rounded-full border-2 border-sidebar-ring shadow-md shadow-sidebar-ring"
           />
