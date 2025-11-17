@@ -1,0 +1,19 @@
+---
+
+import BaseHead from '@/components/BaseHead.astro';
+import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts';
+import { SidebarLayout } from '@/layouts/SidebarLayout';
+
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+  </head>
+  <body>
+    <SidebarLayout client:load>
+      <slot />
+    </SidebarLayout>
+  </body>
+</html>
