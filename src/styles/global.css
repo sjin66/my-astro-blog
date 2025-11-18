@@ -89,6 +89,13 @@
   --color-sidebar-border: var(--sidebar-border);
 
   --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-anton: 'Anton', sans-serif;
+  --font-fjalla: 'Fjalla One', sans-serif;
+  --font-monoton: 'Monoton', cursive;
+  --font-bungee-inline: 'Bungee Inline', sans-serif;
+  --font-erica-one:"Erica One", sans-serif;
+  --font-train-one: "Train One", system-ui;
 }
 
  /*
@@ -163,7 +170,6 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.408 0.123 38.172);
 }
-
 
  /*
   ---break---

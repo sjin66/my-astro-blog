@@ -36,7 +36,9 @@
     "react-dom": "^19.2.0",
     "sharp": "^0.34.3",
     "tailwind-merge": "^3.4.0",
-    "tailwindcss": "^4.1.17"
+    "tailwindcss": "^4.1.17",
+    "ogl": "^1.0.11",
+    "gsap": "^3.13.0"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.1.0",
