@@ -23,16 +23,21 @@ const FOOTER_ICON_COLOR = 'gray' as const;
 const NavigateItem = ({ href, label }: NavigateItemProps) => {
   // get path from window location
   const [path, setPath] = React.useState('/');
+  const baseUrl = import.meta.env.BASE_URL;
 
   React.useEffect(() => {
     setPath(window.location.pathname);
   }, []);
 
+  // Build full href with base URL
+  const fullHref = href === '/' ? baseUrl : `${baseUrl}${href.replace(/^\//, '')}`;
+  const isActive = path === fullHref || path.startsWith(`${fullHref}/`);
+
   return (
     <li>
       <a
-        href={href}
-        className={`font-bold font-mono text-base transition-colors hover:text-sidebar-primary ${path === href ? 'text-sidebar-primary' : 'text-muted-foreground'}`}
+        href={fullHref}
+        className={`font-bold font-mono text-base transition-colors hover:text-sidebar-primary ${isActive ? 'text-sidebar-primary' : 'text-muted-foreground'}`}
       >
         {label}
       </a>
