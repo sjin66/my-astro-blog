@@ -1,4 +1,5 @@
 ---
+import { AppTopBar } from '@/components/AppTopBar';
 import BaseHead from '@/components/BaseHead.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts';
 import { SidebarLayout } from '@/layouts/SidebarLayout';
@@ -6,22 +7,22 @@ import { SidebarLayout } from '@/layouts/SidebarLayout';
 
 <!doctype html>
 <script is:inline>
-	const getThemePreference = () => {
-		if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
-			return localStorage.getItem('theme');
-		}
-		return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-	};
-	const isDark = getThemePreference() === 'dark';
-	document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
+  const getThemePreference = () => {
+    if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+      return localStorage.getItem('theme');
+    }
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  };
+  const isDark = getThemePreference() === 'dark';
+  document.documentElement.classList[isDark ? 'add' : 'remove']('dark');
 
-	if (typeof localStorage !== 'undefined') {
-		const observer = new MutationObserver(() => {
-			const isDark = document.documentElement.classList.contains('dark');
-			localStorage.setItem('theme', isDark ? 'dark' : 'light');
-		});
-		observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
-	}
+  if (typeof localStorage !== 'undefined') {
+    const observer = new MutationObserver(() => {
+      const isDark = document.documentElement.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+  }
 </script>
 <html lang="en">
   <head>
@@ -29,7 +30,9 @@ import { SidebarLayout } from '@/layouts/SidebarLayout';
   </head>
   <body>
     <SidebarLayout client:load>
-      <slot />
+      <div class="relative min-h-screen">
+        <slot />
+      </div>
     </SidebarLayout>
   </body>
 </html>
