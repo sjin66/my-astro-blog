@@ -30,8 +30,18 @@ const NavigateItem = ({ href, label }: NavigateItemProps) => {
   }, []);
 
   // Build full href with base URL
-  const fullHref = href === '/' ? baseUrl : `${baseUrl}${href.replace(/^\//, '')}`;
-  const isActive = path === fullHref || path.startsWith(`${fullHref}/`);
+  // Ensure proper path joining: baseUrl + '/' + href (without leading slash)
+  const normalizedBase = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
+  const normalizedHref = href.startsWith('/') ? href : `/${href}`;
+  const fullHref = href === '/' ? normalizedBase || '/' : `${normalizedBase}${normalizedHref}`;
+
+  // More precise active state checking
+  // For home page (/), only match exactly or with a trailing slash
+  // For other pages, match exactly or as a prefix (for nested routes)
+  const isActive =
+    href === '/'
+      ? path === normalizedBase || path === `${normalizedBase}/`
+      : path === fullHref || path.startsWith(`${fullHref}/`);
 
   return (
     <li>
