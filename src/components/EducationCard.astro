@@ -1,0 +1,49 @@
+---
+import { Image } from "astro:assets";
+
+import { Badge } from "@/components/ui/badge";
+import { Card, CardContent } from "@/components/ui/card";
+
+const { img, alt, degree, school, duration, logo } = Astro.props;
+---
+
+<Card className="w-full relative shadow-card mb-10">
+  <CardContent className="text-left">
+    <div
+      class="flex flex-wrap flex-col content-center justify-between sm:gap-4 lg:flex-row md:gap-10"
+      data-slot="education-card-content"
+    >
+      <!-- university campus image -->
+      <div class="mb-4 md:mb-0">
+        <Image src={img} alt={alt} loading="eager" class="w-90 h-48" />
+      </div>
+      <!-- university information -->
+      <div class="relative flex-1 pb-5">
+        <!-- degree badge -->
+        <Badge className="mb-4">{degree}</Badge>
+        <!-- university name -->
+        <p class="font-extrabold text-xl mb-4">{school}</p>
+        <!-- degree program -->
+        <p
+          class="text-foreground font-bold text-sm"
+          data-slot="education-durarion"
+        >
+          {degree} of science in computer science
+        </p>
+        <p class="text-muted-foreground text-sm" data-slot="education-durarion">
+          {duration}
+        </p>
+        <Image
+          src={logo}
+          alt="University Logo"
+          loading="eager"
+          class="w-40 absolute bottom-0 right-0 filter brightness-0 invert-(--icon-invert)"
+        />
+      </div>
+    </div>
+  </CardContent>
+</Card>
+
+<script>
+  console.log("EducationCard component script executing");
+</script>

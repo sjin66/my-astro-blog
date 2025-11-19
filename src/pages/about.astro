@@ -1,12 +1,18 @@
 ---
+import msuCampus from '@/assets/msu-campus.webp';
+import msuLogo from '@/assets/msu-logo.png';
+import uscCampus from '@/assets/usc-campus.webp';
+import uscLogo from '@/assets/usc-logo.png';
+import EducationCard from '@/components/EducationCard.astro';
 import BasicLayout from '@/layouts/BasicLayout.astro';
-
 const introduction =
   "Hello everyone, I'm Kevin from China. I graduated from the University of Southern California with a Master of Science degree in Computer Science. I am a front-end development engineer. Outside of coding, I am passionate about playing computer games, watching movies, and learning about the latest cutting-edge development technologies.";
 ---
 
 <BasicLayout>
+  <!-- page container -->
   <div class="min-h-dvh flex flex-col items-center overflow-hidden w-full">
+    <!-- about me section -->
     <div
       class="w-full h-dvh flex flex-col items-center align-middle justify-center text-lg text-center px-4 bg-content-background-2"
     >
@@ -22,5 +28,36 @@ const introduction =
         </p>
       </div>
     </div>
+    <!-- education section -->
+    <div class="w-full text-lg bg-content-background text-center px-4 pt-10">
+      <div class="flex flex-col max-w-sm lg:max-w-3xl mx-auto" data-slot="education-section">
+        <h2
+          class="font-title text-2xl text-left mb-8 underline decoration-double decoration-primary"
+          data-slot="education-title"
+        >
+          EDUCATION
+        </h2>
+        <div class="flex flex-row flex-wrap justify-between w-full" data-slot="education-cards">
+          <!-- USC Master Education Card -->
+          <EducationCard
+            img={uscCampus}
+            alt="University Logo"
+            degree="Master"
+            school="University of Southern California"
+            duration="Oct 2021 - May 2023"
+            logo={uscLogo}
+          />
+          <!-- MSU Bachelor Education Card -->
+          <EducationCard
+            img={msuCampus}
+            alt="University Logo"
+            degree="Bachelor"
+            school="Michigan State University"
+            duration="Sep 2018 - May 2022"
+            logo={msuLogo}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
 </BasicLayout>
-
