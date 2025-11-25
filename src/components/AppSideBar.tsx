@@ -3,14 +3,7 @@
 import * as React from 'react';
 
 import selfie from '@/assets/self.jpeg';
-import { ModeToggle } from '@/components/ModeToggle';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from '@/components/ui/sidebar';
+import { Sidebar, SidebarContent, SidebarFooter, SidebarRail } from '@/components/ui/sidebar';
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip';
 
 type NavigateItemProps = {
@@ -86,9 +79,6 @@ const SVGLinkIcon = ({ href, svgPath, viewBox = '0 0 512 512', label }: SVGLinkI
 function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
     <Sidebar collapsible="offcanvas" {...props}>
-      <SidebarHeader>
-        <ModeToggle />
-      </SidebarHeader>
       <SidebarContent>
         <div className="flex flex-col items-center justify-center mt-30 ">
           <img

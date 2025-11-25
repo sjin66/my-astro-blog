@@ -1,5 +1,4 @@
 ---
-import { AppTopBar } from '@/components/AppTopBar';
 import BaseHead from '@/components/BaseHead.astro';
 import { SITE_DESCRIPTION, SITE_TITLE } from '@/consts';
 import { SidebarLayout } from '@/layouts/SidebarLayout';
@@ -21,7 +20,10 @@ import { SidebarLayout } from '@/layouts/SidebarLayout';
       const isDark = document.documentElement.classList.contains('dark');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
     });
-    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
   }
 </script>
 <html lang="en">
