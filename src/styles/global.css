@@ -18,6 +18,31 @@
   ---break---
  */
 
+ /* dont forget base url */
+ @font-face {
+	font-family: "Anton";
+	src: url("/my-astro-blog/fonts/anton.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Fjalla One";
+	src: url("/my-astro-blog/fonts/fjalla-one.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Monoton";
+	src: url("/my-astro-blog/fonts/monoton.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
  @theme inline {
 
   --radius-sm: calc(var(--radius) - 4px);
@@ -91,6 +116,7 @@
   --color-sidebar-ring: var(--sidebar-ring);
 
   --color-content-background: var(--content-background);
+  --color-content-background-2: var(--content-background-2);
 
 
   --font-anton: 'Anton', sans-serif;
@@ -100,7 +126,6 @@
   --font-erica-one:"Erica One", sans-serif;
   --font-train-one: "Train One", system-ui;
   --font-title: 'Monoton', cursive;
-
 }
 
  /*
@@ -141,6 +166,10 @@
   --sidebar-border: oklch(0.92 0.004 286.32);
   --sidebar-ring: oklch(0.75 0.183 55.934);
   --content-background: #e4dad0;
+  --content-background-2: oklch(96.715% 0.00011 271.152);
+  --icon-invert:0; /* 配合 brightness(0), 根据主题将图片转为纯黑或纯白 */
+
+
 }
 
 .dark {
@@ -176,6 +205,9 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.408 0.123 38.172);
   --content-background: oklch(0.141 0.005 285.823);
+  --content-background-2: oklch(0.205 0.006 286.033);
+  --icon-invert:1;
+
 }
 
  /*
