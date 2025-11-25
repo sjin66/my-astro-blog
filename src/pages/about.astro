@@ -3,10 +3,16 @@ import msuCampus from '@/assets/msu-campus.webp';
 import msuLogo from '@/assets/msu-logo.png';
 import uscCampus from '@/assets/usc-campus.webp';
 import uscLogo from '@/assets/usc-logo.png';
+import BlurText from '@/components/BlurText';
 import EducationCard from '@/components/EducationCard.astro';
 import BasicLayout from '@/layouts/BasicLayout.astro';
+
+const handleAnimationComplete = () => {
+  console.log('Animation completed!');
+};
+
 const introduction =
-  "Hello everyone, I'm Kevin from China. I graduated from the University of Southern California with a Master of Science degree in Computer Science. I am a front-end development engineer. Outside of coding, I am passionate about playing computer games, watching movies, and learning about the latest cutting-edge development technologies.";
+  "Hi, I'm Shengtong Jin from China. I hold a Master's degree in Computer Science from the University of Southern California. I'm a front-end developer, and outside of work, I enjoy playing video games, watching movies, and staying updated on the latest tech trends.";
 ---
 
 <BasicLayout>
@@ -17,19 +23,23 @@ const introduction =
       class="w-full h-dvh flex flex-col items-center align-middle justify-center text-lg text-center px-4 bg-content-background-2"
     >
       <h2
-        class="font-train-one text-8xl font-extrabold text-center mb-20"
+        class="font-train-one text-5xl md:text-6xl lg:text-8xl font-extrabold text-center mb-20"
         data-slot="education-title"
       >
         ABOUT ME
       </h2>
-      <div class="max-w-3xl mx-auto text-left">
-        <p class="text-lg/loose">
-          {introduction}
-        </p>
-      </div>
+      <BlurText
+        text={introduction}
+        delay={75}
+        animateBy="words"
+        direction="top"
+        onAnimationComplete={handleAnimationComplete}
+        className="text-base md:text-lg lg:text-xl max-w-3xl mx-auto text-left"
+        client:load
+      />
     </div>
     <!-- education section -->
-    <div class="w-full text-lg bg-content-background text-center px-4 pt-10">
+    <div class="w-full text-lg bg-content-background text-center px-4 pt-20">
       <div class="flex flex-col max-w-sm lg:max-w-3xl mx-auto" data-slot="education-section">
         <h2
           class="font-title text-2xl text-left mb-8 underline decoration-double decoration-primary"
@@ -37,7 +47,7 @@ const introduction =
         >
           EDUCATION
         </h2>
-        <div class="flex flex-row flex-wrap justify-between w-full" data-slot="education-cards">
+        <div class="flex flex-row flex-wrap justify-between w-full bg-content-background-2" data-slot="education-cards">
           <!-- USC Master Education Card -->
           <EducationCard
             img={uscCampus}
