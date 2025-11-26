@@ -1,0 +1,48 @@
+---
+import SkillBar from "@/components/SkillBar.astro";
+
+export interface Props {
+  skillData: {
+    svg: string;
+    svgColor?: string;
+    name: string;
+    percentage: number;
+    color?: string;
+  }[];
+  title?: string;
+  class?: string;
+}
+const { skillData, title, class:className } = Astro.props;
+---
+
+<div
+  class={`bg-transparent text-foreground flex flex-col text-left gap-6 rounded-xl py-6 w-full md:w-[45%] mb-10 ${className ?? ''}`}
+>
+  <div >
+    <div class="leading-none font-semibold font-bungee-inline pb-2">{title ?? "Skill"}</div>
+    <div class="w-full mt-4">
+      {
+        skillData.map(({ name, percentage, color, svg, svgColor }) => (
+          <div class="mb-4">
+            <div class="flex justify-between mb-1">
+              <span class="text-sm font-medium">{name}</span>
+              <svg
+                width="25px"
+                role="img"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <>
+                  <title>TypeScript</title>
+                  <path d={svg} fill={svgColor} />
+                </>
+              </svg>
+            </div>
+            <SkillBar percentage={percentage} color={'red'} />
+          </div>
+        ))
+      }
+      <!-- <SkillBar percentage={90} color="blue" className="mb-4" /> -->
+    </div>
+  </div>
+</div>

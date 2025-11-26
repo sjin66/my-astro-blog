@@ -1,0 +1,44 @@
+---
+export interface Props {
+  percentage: number;
+  height?: "xs" | "sm" | "md" | "lg" | "xl";
+  showLabel?: boolean;
+  className?: string;
+  svg?: string;
+  color?: string;
+}
+
+const {
+  color,
+  percentage = 0,
+  className = "",
+} = Astro.props;
+
+const normalizedPercentage = Math.min(100, Math.max(0, percentage));
+const backgroundColor = `bg-primary/${percentage}`;
+---
+
+<div
+  class={`skill-bar-container w-full bg-muted-foreground rounded-full h-3 ${className}`}
+  data-slot="skill-bar-back"
+>
+  <div
+    class={`skill-bar h-3  rounded-full w-full bg-primary opacity-${percentage}`}
+    style={`opacity: ${percentage / 100};`}
+    data-percentage={normalizedPercentage}
+    data-slot="skill-bar-front"
+  />
+
+</div>
+
+<style>
+  .skill-bar-container {
+    overflow: hidden;
+  }
+  .skill-bar {
+    width: 0;
+    transition: width 5s cubic-bezier(0.22, 0.9, 0.28, 1);
+    will-change: width;
+    display: block;
+  }
+</style>
