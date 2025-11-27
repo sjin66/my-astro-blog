@@ -1,40 +1,26 @@
 ---
-import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 
-import BaseHead from '../../components/BaseHead.astro';
-import Footer from '../../components/Footer.astro';
-import FormattedDate from '../../components/FormattedDate.astro';
-import Header from '../../components/Header.astro';
-import { SITE_DESCRIPTION, SITE_TITLE } from '../../consts';
-
+import PostCard from '@/components/PostCard.astro';
 import BasicLayout from '@/layouts/BasicLayout.astro';
-
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 ---
-
-<BasicLayout>
-  <main>
-    <section>
-      <ul>
-        {
-          posts.map((post) => (
-            <li>
-              <a href={`/blog/${post.id}/`}>
-                {post.data.heroImage && (
-                  <Image width={720} height={360} src={post.data.heroImage} alt="" />
-                )}
-                <h4 class="title">{post.data.title}</h4>
-                <p class="date">
-                  <FormattedDate date={post.data.pubDate} />
-                </p>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </section>
-  </main>
+<BasicLayout client:load>
+  <div class="pt-30">
+    <div class="mx-auto max-w-3xl md:max-w-lg lg:max-w-3xl py-0 px-5">
+      <section class="">
+        <ul class="lg:flex lg:flex-row lg:flex-wrap lg:justify-between">
+          {
+            posts.map((post: any) => (
+              <li class="w-full mb-7 lg:w-[47%] ">
+                <PostCard post={post} class="" />
+              </li>
+            ))
+          }
+        </ul>
+      </section>
+    </div>
+  </div>
 </BasicLayout>
