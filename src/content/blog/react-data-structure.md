@@ -33,11 +33,11 @@ function FiberNode(
   // Instance
   this.tag = tag; // fiber 类型
   this.key = key; // 用于调和子节点
-  this.elementType = null; 
+  this.elementType = null;
   this.type = null; // 元素类型
   this.stateNode = null; // 对应的真实 DOM 元素
 
-  // Fiber 链表结构 
+  // Fiber 链表结构
   this.return = null; // 指向父节点（父节点）
   this.child = null;  // 指向第一个子节点（子节点）
   this.sibling = null; // 指向下一个兄弟节点（兄弟节点）
@@ -52,7 +52,7 @@ function FiberNode(
   this.updateQueue = null;          // 状态更新队列，存储 setState 产生的更新对象
   this.memoizedState = null;        // 上一次渲染时使用的 state
   this.dependencies = null;         // 当前 Fiber 所依赖的上下文（Context）、事件订阅等
-  
+
   this.mode = mode;
 
   // Effects
@@ -60,7 +60,7 @@ function FiberNode(
   this.subtreeFlags = NoFlags;  // 子节点树中需要执行的副作用（用于性能优化）
   this.deletions = null;        // 待删除的子 Fiber 节点数组（用于记录需要被删除的节点）
 
-  // Lane 模型（优先级调度） 
+  // Lane 模型（优先级调度）
   // React 17+ 使用的优先级调度模型，用于并发渲染
   this.lanes = NoLanes;        // 当前 Fiber 上待处理的更新优先级车道
   this.childLanes = NoLanes;   // 子节点树中待处理的更新优先级车道
@@ -73,7 +73,7 @@ function FiberNode(
 
 Fiber 节点通过自身的 `child`、`sibling` 以及 `return` 指针构建了一个树结构。并通过自身的 `alternate` 指针，指向 **current tree** 或 **workInProgress tree** 中的对应 Fiber 节点， 实现了如下图所示的**双缓冲树**的架构。
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/cde88f029600479c9b14fec000e85a7f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763394951&x-orig-sign=%2BKVe9zXP3hr64bUuIe9uyGjNMVs%3D)
+![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/cde88f029600479c9b14fec000e85a7f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1764862504&x-orig-sign=WstnI5lnWoat2YFPRNkOVw%2FB0P4%3D)
 
 ## Hook 链表
 
@@ -94,7 +94,7 @@ export type Hook = {
 };
 ```
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/64130625c816478195da4a3b93864149~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763394951&x-orig-sign=YKEAm%2F79geVKHaJ4I8ZDFPdAb9M%3D)
+![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/64130625c816478195da4a3b93864149~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1764862504&x-orig-sign=SmfRWf1jROAbXcLrWIBqwvo2thg%3D)
 
 ## Update Queue
 
@@ -131,7 +131,7 @@ export type UpdateQueue<S, A> = {
 };
 ```
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/f7e39db23ad5435c88a46a2627391561~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763394951&x-orig-sign=5%2Bf2%2FXDM1%2FxUgv2v3bJvSXsU3QU%3D)
+![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/f7e39db23ad5435c88a46a2627391561~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1764862504&x-orig-sign=WXe%2BC%2F9kHWor38TVYO0MfN35doo%3D)
 
 当调用：
 

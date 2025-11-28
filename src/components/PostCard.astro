@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 import FormattedDate from './FormattedDate.astro';
 import { Badge } from './ui/badge';
 const { post, class: className } = Astro.props;
@@ -9,7 +11,14 @@ const href = `${baseUrl}/blog/${post.id}/`;
 
 <div class={`border shadow-lg bg-muted ${className}`} data-slot="post-card-container">
   <a href={href} data-slot="post-card-link">
-    {post.data.heroImage && <img src={post.data.heroImage.src} alt="" class="w-full h-52" data-slot="post-card-image" />}
+    {post.data.heroImage && (
+      <Image
+        src={post.data.heroImage}
+        alt=""
+        class="w-full h-52 object-cover"
+        data-slot="post-card-image"
+      />
+    )}
     <div class="mx-5 mt-5 border-t-2 py-5">
       <div class="h-20" data-slot="post-card-title-container">
         <p class="font-extrabold text-2xl mb-5 truncate-2-lines">{post.data.title}</p>
