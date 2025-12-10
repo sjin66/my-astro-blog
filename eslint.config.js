@@ -104,6 +104,7 @@ export default [
       // '@typescript-eslint/prefer-const': 'error',
       'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
       'react/react-in-jsx-scope': 'off',
+      'react/prop-types': 'off', // TypeScript 已经提供了类型检查，不需要 prop-types
       'prettier/prettier': 'error',
       'no-undef': 'off',
     },

@@ -1,0 +1,55 @@
+---
+import { PanelLeftIcon } from 'lucide-react';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className = '' } = Astro.props;
+---
+
+<button
+  data-sidebar-trigger
+  type="button"
+  class={`size-9 inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive hover:bg-background dark:hover:bg-primary cursor-pointer border-none shadow-none ${className}`}
+  aria-label="Toggle Sidebar"
+>
+  <PanelLeftIcon />
+  <span class="sr-only">Toggle Sidebar</span>
+</button>
+
+<script>
+  // Add click handler to this button
+  (function setupTrigger() {
+    const button = document.querySelector('[data-sidebar-trigger]');
+
+    button?.addEventListener('click', function (e) {
+      console.log('click');
+      e.preventDefault();
+      e.stopPropagation();
+
+      // Call global toggle function
+      const toggleFn = (window as { toggleSidebar?: () => void }).toggleSidebar;
+      if (typeof toggleFn === 'function') {
+        toggleFn();
+      } else {
+        // Fallback: direct toggle if function not available
+        const sidebarWrapper = document.querySelector('[data-sidebar-wrapper]');
+        if (!sidebarWrapper) return;
+
+        const currentState = sidebarWrapper.getAttribute('data-state') || 'expanded';
+        const isOpen = currentState === 'expanded';
+        const newState = isOpen ? 'collapsed' : 'expanded';
+
+        sidebarWrapper.setAttribute('data-state', newState);
+        const sidebarGroup = document.querySelector('[data-sidebar]')?.closest('.group');
+        if (sidebarGroup) sidebarGroup.setAttribute('data-state', newState);
+        const sidebar = document.querySelector('[data-sidebar]');
+        if (sidebar) sidebar.setAttribute('data-state', newState);
+
+        const maxAge = 60 * 60 * 24 * 7;
+        document.cookie = `sidebar_state=${newState === 'expanded'}; path=/; max-age=${maxAge}`;
+      }
+    });
+  })();
+</script>

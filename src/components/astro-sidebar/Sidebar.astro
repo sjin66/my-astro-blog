@@ -1,0 +1,123 @@
+---
+import { cn } from '@/lib/utils';
+
+interface Props {
+  side?: 'left' | 'right';
+  variant?: 'sidebar' | 'floating' | 'inset';
+  collapsible?: 'offcanvas' | 'icon' | 'none';
+  class?: string;
+}
+
+const {
+  side = 'left',
+  variant = 'sidebar',
+  collapsible = 'offcanvas',
+  class: className = '',
+} = Astro.props;
+---
+
+{collapsible === 'none' ? (
+  <div
+    data-sidebar
+    class={`bg-sidebar text-sidebar-foreground flex h-full w-[var(--sidebar-width)] flex-col ${className}`}
+  >
+    <slot />
+  </div>
+) : (
+  <>
+    <!-- Mobile Sheet -->
+    <div
+      data-mobile-sheet
+      data-state="closed"
+      class="md:hidden fixed inset-0 z-50"
+      style="display: none;"
+    >
+      <div
+        data-mobile-sheet-overlay
+        class="fixed inset-0 bg-black/50 data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0"
+      />
+      <div
+        class={`bg-sidebar text-sidebar-foreground fixed inset-y-0 ${side === 'left' ? 'left-0' : 'right-0'} h-full w-[18rem] p-0 flex flex-col data-[state=open]:animate-in data-[state=closed]:animate-out ${
+          side === 'left'
+            ? 'data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left'
+            : 'data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right'
+        }`}
+      >
+        <button
+          data-mobile-sheet-close
+          class="absolute top-4 right-4 rounded-xs opacity-70 hover:opacity-100 focus:ring-2 focus:ring-offset-2 focus:outline-hidden"
+          aria-label="Close sidebar"
+        >
+          <svg
+            class="size-4"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M18 6L6 18" />
+            <path d="M6 6l12 12" />
+          </svg>
+          <span class="sr-only">Close</span>
+        </button>
+        <slot />
+      </div>
+    </div>
+
+    <!-- Desktop Sidebar -->
+    <div
+      class="group peer text-sidebar-foreground hidden md:block"
+      data-state="expanded"
+      data-collapsible=""
+      data-collapsible-type={collapsible}
+      data-variant={variant}
+      data-side={side}
+      data-slot="sidebar"
+    >
+      <!-- Sidebar gap -->
+      <div
+        data-slot="sidebar-gap"
+        data-sidebar-gap
+        class={cn(
+          'relative w-(--sidebar-width) bg-transparent transition-[width] duration-200 ease-linear',
+          'group-data-[collapsible=offcanvas]:w-0',
+          'group-data-[side=right]:rotate-180',
+          variant === 'floating' || variant === 'inset'
+            ? 'group-data-[collapsible=icon]:w-[calc(var(--sidebar-width-icon)+(--spacing(4)))]'
+            : 'group-data-[collapsible=icon]:w-(--sidebar-width-icon)'
+        )}
+      />
+      <!-- Sidebar container -->
+      <div
+        data-sidebar="sidebar"
+        data-slot="sidebar-container"
+        data-state="expanded"
+        class={`fixed inset-y-0 z-10 hidden h-svh w-[var(--sidebar-width)] transition-[left,right,width] duration-200 ease-linear md:flex ${
+          side === 'left'
+            ? 'left-0 group-data-[state=collapsed]:left-[calc(var(--sidebar-width)*-1)]'
+            : 'right-0 group-data-[state=collapsed]:right-[calc(var(--sidebar-width)*-1)]'
+        } ${
+          variant === 'floating' || variant === 'inset'
+            ? 'p-2 group-data-[state=collapsed]:w-[calc(var(--sidebar-width-icon)+1rem+2px)]'
+            : `group-data-[state=collapsed]:w-[var(--sidebar-width-icon)] ${
+                side === 'left' ? 'border-r' : 'border-l'
+              }`
+        }`}
+      >
+        <div
+          class={`bg-sidebar flex h-full w-full flex-col ${
+            variant === 'floating'
+              ? 'rounded-lg border border-sidebar-border shadow-sm'
+              : ''
+          }`}
+        >
+          <slot />
+        </div>
+      </div>
+    </div>
+  </>
+)}
+

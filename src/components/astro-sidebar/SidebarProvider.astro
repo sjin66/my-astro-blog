@@ -1,0 +1,94 @@
+---
+interface Props {
+  defaultOpen?: boolean;
+  class?: string;
+}
+
+const { defaultOpen = true, class: className = '' } = Astro.props;
+---
+
+<div
+  data-sidebar-wrapper
+  class={`group/sidebar-wrapper has-data-[variant=inset]:bg-sidebar flex min-h-svh w-full ${className}`}
+  style={{
+    '--sidebar-width': '16rem',
+    '--sidebar-width-icon': '3rem',
+  }}
+>
+  <slot />
+</div>
+
+<script>
+  // Define global sidebar toggle function
+  (function() {
+    // Initialize global sidebar state variable
+    if (!(window as { __sidebarState?: boolean }).__sidebarState) {
+      (window as { __sidebarState?: boolean }).__sidebarState = true; // default to expanded
+    }
+
+    function getSidebarState(): boolean {
+      return (window as { __sidebarState?: boolean }).__sidebarState ?? true;
+    }
+
+    function setSidebarState(open: boolean) {
+      (window as { __sidebarState?: boolean }).__sidebarState = open;
+    }
+
+    function updateSidebarState(open: boolean) {
+      const sidebarWrapper = document.querySelector('[data-sidebar-wrapper]');
+      const sidebarGroup = document.querySelector('[data-sidebar]')?.closest('.group');
+      const sidebar = document.querySelector('[data-sidebar]');
+      const mobileSheet = document.querySelector('[data-mobile-sheet]');
+
+      const isMobile = window.innerWidth < 768;
+      const state = open ? 'expanded' : 'collapsed';
+
+      // Update global variable
+      setSidebarState(open);
+
+      if (isMobile && mobileSheet) {
+        mobileSheet.setAttribute('data-state', open ? 'open' : 'closed');
+        (mobileSheet as HTMLElement).style.display = open ? 'block' : 'none';
+        document.body.style.overflow = open ? 'hidden' : '';
+      } else {
+        if (sidebarWrapper) sidebarWrapper.setAttribute('data-state', state);
+        if (sidebarGroup) {
+          sidebarGroup.setAttribute('data-state', state);
+          // Update data-collapsible based on state (like React version)
+          // When expanded, data-collapsible should be empty
+          // When collapsed, data-collapsible should be the collapsible type
+          const collapsibleType = sidebarGroup.getAttribute('data-collapsible-type') || sidebarGroup.getAttribute('data-collapsible') || 'offcanvas';
+          sidebarGroup.setAttribute('data-collapsible', state === 'collapsed' ? collapsibleType : '');
+          // Store the original collapsible type for future use
+          if (!sidebarGroup.getAttribute('data-collapsible-type')) {
+            sidebarGroup.setAttribute('data-collapsible-type', collapsibleType);
+          }
+        }
+        if (sidebar) sidebar.setAttribute('data-state', state);
+      }
+    }
+
+    // Global toggle function
+    (window as { toggleSidebar?: () => void }).toggleSidebar = function() {
+      const sidebarWrapper = document.querySelector('[data-sidebar-wrapper]');
+      if (!sidebarWrapper) return;
+
+      const currentState = sidebarWrapper.getAttribute('data-state') || 'expanded';
+      const isOpen = currentState === 'expanded';
+      updateSidebarState(!isOpen);
+    };
+
+    // Initialize sidebar state from global variable
+    function initSidebar() {
+      const isOpen = getSidebarState();
+      updateSidebarState(isOpen);
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initSidebar);
+    } else {
+      initSidebar();
+    }
+  })();
+</script>

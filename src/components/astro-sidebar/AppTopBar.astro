@@ -1,0 +1,48 @@
+---
+import SidebarTrigger from './SidebarTrigger.astro';
+
+import { ModeToggle } from '@/components/ModeToggle';
+---
+<div
+  id="app-top-bar"
+  data-variant="top-bar"
+  data-slot="top-bar"
+  class="fixed top-0 right-0 h-16 z-50 pt-4 px-4 top-bar"
+>
+  <div class="flex h-15 rounded-full border border-foreground/7 shadow-[rgba(31, 38, 135, 0.15) 0px 8px 32px] bg-foreground/1 w-full px-4 items-center justify-between align-between backdrop-blur-xl">
+    <SidebarTrigger />
+    <h2 class="font-bold">SHENGTONG JIN'S BLOG</h2>
+    <ModeToggle client:load />
+  </div>
+</div>
+
+<script>
+  (function initTopBar() {
+    const mainElement = document.querySelector('main[data-sidebar-inset]');
+    const topBarElement = document.getElementById('app-top-bar');
+
+    if (!mainElement || !topBarElement) {
+      // Retry after a short delay if elements aren't ready yet
+      setTimeout(initTopBar, 100);
+      return;
+    }
+
+    const updateWidth = () => {
+      const mainWidth = (mainElement as HTMLElement).offsetWidth;
+      topBarElement.style.width = `${mainWidth}px`;
+    };
+
+    // Set initial width
+    updateWidth();
+
+    // Observe resize changes
+    const resizeObserver = new ResizeObserver(updateWidth);
+    resizeObserver.observe(mainElement);
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', () => {
+      resizeObserver.disconnect();
+    });
+  })();
+</script>
+

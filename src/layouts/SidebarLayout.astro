@@ -1,0 +1,14 @@
+---
+import AppSidebar from '@/components/astro-sidebar/AppSidebar.astro';
+import AppTopBar from '@/components/astro-sidebar/AppTopBar.astro';
+import SidebarInset from '@/components/astro-sidebar/SidebarInset.astro';
+import SidebarProvider from '@/components/astro-sidebar/SidebarProvider.astro';
+---
+
+<SidebarProvider>
+  <AppSidebar />
+  <SidebarInset>
+    <AppTopBar />
+    <slot />
+  </SidebarInset>
+</SidebarProvider>
