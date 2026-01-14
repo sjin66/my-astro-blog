@@ -47,7 +47,8 @@ const { defaultOpen = true, class: className = '' } = Astro.props;
       setSidebarState(open);
 
       if (isMobile && mobileSheet) {
-        mobileSheet.setAttribute('data-state', open ? 'open' : 'closed');
+        const state = open ? 'open' : 'closed';
+        mobileSheet.setAttribute('data-state', state);
         (mobileSheet as HTMLElement).style.display = open ? 'block' : 'none';
         document.body.style.overflow = open ? 'hidden' : '';
       } else {
@@ -70,18 +71,52 @@ const { defaultOpen = true, class: className = '' } = Astro.props;
 
     // Global toggle function
     (window as { toggleSidebar?: () => void }).toggleSidebar = function() {
-      const sidebarWrapper = document.querySelector('[data-sidebar-wrapper]');
-      if (!sidebarWrapper) return;
-
-      const currentState = sidebarWrapper.getAttribute('data-state') || 'expanded';
-      const isOpen = currentState === 'expanded';
+      const isMobile = window.innerWidth < 768;
+      const mobileSheet = document.querySelector('[data-mobile-sheet]');
+      
+      let isOpen: boolean;
+      
+      if (isMobile && mobileSheet) {
+        // Mobile: check mobileSheet state
+        const currentState = mobileSheet.getAttribute('data-state') || 'closed';
+        isOpen = currentState === 'open';
+      } else {
+        // Desktop: check global state or sidebarWrapper state
+        isOpen = getSidebarState();
+      }
+      
       updateSidebarState(!isOpen);
     };
 
     // Initialize sidebar state from global variable
     function initSidebar() {
-      const isOpen = getSidebarState();
+      const isMobile = window.innerWidth < 768;
+      
+      // Mobile: always start closed
+      // Desktop: use saved state or default to open
+      const isOpen = isMobile ? false : getSidebarState();
+      
       updateSidebarState(isOpen);
+      
+      // Setup mobile sheet overlay click handler
+      const mobileSheetOverlay = document.querySelector('[data-mobile-sheet-overlay]');
+      if (mobileSheetOverlay) {
+        mobileSheetOverlay.addEventListener('click', () => {
+          if (window.innerWidth < 768) {
+            updateSidebarState(false);
+          }
+        });
+      }
+      
+      // Setup mobile sheet close button handler
+      const mobileSheetClose = document.querySelector('[data-mobile-sheet-close]');
+      if (mobileSheetClose) {
+        mobileSheetClose.addEventListener('click', () => {
+          if (window.innerWidth < 768) {
+            updateSidebarState(false);
+          }
+        });
+      }
     }
 
     // Initialize when DOM is ready
