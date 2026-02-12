@@ -1,0 +1,53 @@
+---
+import Layout from '@/layouts/BasicLayout.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+
+const projects = [
+  {
+    title: 'PdfLite',
+    description: '一款轻量 PDF 在线工具，支持上传、预览与基础标注，聚焦移动端体验。',
+    tech: ['React', 'PDF.js', 'Tailwind CSS'],
+    links: {
+      live: 'https://jsw1996.github.io/PdfLite/',
+      github: 'https://github.com/jsw1996/PdfLite',
+    },
+    meta: { status: 'Live' },
+  },
+  {
+    title: 'Astro Blog',
+    description: '当前博客的 Astro + React 组合站点，带侧边栏、暗色模式与内容预取。',
+    tech: ['Astro', 'React', 'TypeScript', 'Shadcn UI'],
+    links: {
+      live: 'https://sjin66.github.io/my-astro-blog/',
+      github: 'https://github.com/sjin66/my-astro-blog',
+    },
+    meta: { status: 'Live' },
+  },
+  {
+    title: 'UI Playground',
+    description: '组件示例集合，涵盖按钮、卡片、排版与动画，便于快速复用视觉样式。',
+    tech: ['Storybook', 'Tailwind CSS', 'Radix UI'],
+    links: {
+      docs: 'https://ui.shadcn.com',
+      github: 'https://github.com/shadcn/ui',
+    },
+    meta: { status: 'Reference' },
+  },
+];
+---
+
+<Layout>
+  <section class="mx-auto max-w-6xl px-4 pt-30 py-10 md:pt-30">
+    <div class="flex flex-col gap-3 mb-8 md:mb-10">
+      <p class="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Projects</p>
+      <h1 class="text-3xl md:text-4xl font-bold text-foreground">Recent Projects & Experiments</h1>
+      <p class="text-base text-muted-foreground max-w-3xl">A curated list of recent builds and references across tools, this blog, and component libraries so you can quickly see the stack and links.</p>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {projects.map((project) => (
+        <ProjectCard {...project} />
+      ))}
+    </div>
+  </section>
+</Layout>

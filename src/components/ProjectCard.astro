@@ -1,0 +1,101 @@
+---
+import { Badge } from '@/components/ui/badge';
+
+interface Links {
+  live?: string;
+  github?: string;
+  docs?: string;
+}
+
+interface Meta {
+  status?: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  tech?: string[];
+  links?: Links;
+  meta?: Meta;
+}
+
+const { title, description, tech = [], links, meta } = Astro.props;
+---
+
+<article class="group relative overflow-hidden rounded-2xl border border-border bg-gradient-to-b from-background/70 via-background/80 to-background/95 shadow-lg transition duration-300 hover:-translate-y-1 hover:shadow-2xl">
+  <div
+    class="pointer-events-none absolute inset-x-6 top-0 h-14 rounded-b-full bg-gradient-to-r from-primary/75 via-primary/10 to-transparent blur-3xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+    aria-hidden="true"
+  />
+  <div class="flex flex-col gap-4 p-6">
+    <div class="flex items-start justify-between gap-3">
+      <h3 class="text-xl font-semibold leading-tight text-foreground">{title}</h3>
+      {meta?.status && (
+        <span class="rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-semibold text-emerald-500">
+          {meta.status}
+        </span>
+      )}
+    </div>
+    <p class="text-sm leading-relaxed text-muted-foreground">{description}</p>
+
+    {tech.length > 0 && (
+      <div class="flex flex-wrap gap-2">
+        {tech.map((item) => (
+          <Badge
+            variant="outline"
+            className="border-border/60 bg-muted/60 text-xs text-foreground/80"
+          >
+            {item}
+          </Badge>
+        ))}
+      </div>
+    )}
+
+    <div class="flex flex-wrap gap-3 pt-2">
+      {links?.live && (
+        <a
+          href={links.live}
+          class="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-medium text-primary transition hover:border-primary/60 hover:bg-primary/15"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span>Live Demo</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M7 17 17 7" />
+            <path d="M7 7h10v10" />
+          </svg>
+        </a>
+      )}
+      {links?.github && (
+        <a
+          href={links.github}
+          class="inline-flex items-center gap-2 rounded-full border border-border/70 px-4 py-2 text-sm font-medium text-foreground transition hover:border-foreground/60 hover:bg-foreground/5"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span>GitHub</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
+          </svg>
+        </a>
+      )}
+      {links?.docs && (
+        <a
+          href={links.docs}
+          class="inline-flex items-center gap-2 rounded-full border border-border/70 px-4 py-2 text-sm font-medium text-foreground transition hover:border-foreground/60 hover:bg-foreground/5"
+          target="_blank"
+          rel="noreferrer"
+        >
+          <span>Docs</span>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9" />
+            <path d="M12 4h9" />
+            <path d="M4 9h16" />
+            <path d="M4 15h16" />
+          </svg>
+        </a>
+      )}
+    </div>
+  </div>
+</article>
+
