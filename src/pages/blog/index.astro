@@ -8,13 +8,18 @@ const posts = (await getCollection('blog')).sort(
 );
 ---
 <BasicLayout client:load>
-  <div class="pt-30">
-    <div class="mx-auto max-w-3xl md:max-w-lg lg:max-w-3xl py-0 px-5">
-      <section class="">
-        <ul class="lg:flex lg:flex-row lg:flex-wrap lg:justify-between">
+  <div class="pt-30 pb-15">
+    <div class="mx-auto max-w-6xl px-4 py-0 ">
+      <section class="flex flex-col gap-4 mb-10">
+        <p class="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Blog</p>
+        <h1 class="text-3xl md:text-4xl font-bold text-foreground">Recent Posts & Notes</h1>
+        <p class="text-base text-muted-foreground max-w-3xl">A curated list of recent writes and references across this blog so you can quickly skim topics, tags, and dates.</p>
+      </section>
+      <section>
+        <ul class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {
             posts.map((post: any) => (
-              <li class="w-full mb-7 lg:w-[47%] ">
+              <li>
                 <PostCard post={post} class="" />
               </li>
             ))
