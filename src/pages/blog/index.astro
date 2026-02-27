@@ -2,12 +2,16 @@
 import { getCollection } from 'astro:content';
 
 import PostCard from '@/components/PostCard.astro';
+import { SITE_TITLE } from '@/consts';
 import BasicLayout from '@/layouts/BasicLayout.astro';
 const posts = (await getCollection('blog')).sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 ---
-<BasicLayout client:load>
+<BasicLayout
+  title={`博客文章 | ${SITE_TITLE}`}
+  description="React 源码解析、前端技术文章与开发经验分享。涵盖 Fiber 架构、Diff 算法、Render 与 Commit 阶段等深度内容。"
+>
   <div class="pt-30 pb-15">
     <div class="mx-auto max-w-6xl px-4 py-0 ">
       <section class="flex flex-col gap-4 mb-10">

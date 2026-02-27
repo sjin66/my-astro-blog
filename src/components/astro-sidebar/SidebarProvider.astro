@@ -73,9 +73,9 @@ const { defaultOpen = true, class: className = '' } = Astro.props;
     (window as { toggleSidebar?: () => void }).toggleSidebar = function() {
       const isMobile = window.innerWidth < 768;
       const mobileSheet = document.querySelector('[data-mobile-sheet]');
-      
+
       let isOpen: boolean;
-      
+
       if (isMobile && mobileSheet) {
         // Mobile: check mobileSheet state
         const currentState = mobileSheet.getAttribute('data-state') || 'closed';
@@ -84,20 +84,20 @@ const { defaultOpen = true, class: className = '' } = Astro.props;
         // Desktop: check global state or sidebarWrapper state
         isOpen = getSidebarState();
       }
-      
+
       updateSidebarState(!isOpen);
     };
 
     // Initialize sidebar state from global variable
     function initSidebar() {
       const isMobile = window.innerWidth < 768;
-      
+
       // Mobile: always start closed
       // Desktop: use saved state or default to open
       const isOpen = isMobile ? false : getSidebarState();
-      
+
       updateSidebarState(isOpen);
-      
+
       // Setup mobile sheet overlay click handler
       const mobileSheetOverlay = document.querySelector('[data-mobile-sheet-overlay]');
       if (mobileSheetOverlay) {
@@ -107,7 +107,7 @@ const { defaultOpen = true, class: className = '' } = Astro.props;
           }
         });
       }
-      
+
       // Setup mobile sheet close button handler
       const mobileSheetClose = document.querySelector('[data-mobile-sheet-close]');
       if (mobileSheetClose) {

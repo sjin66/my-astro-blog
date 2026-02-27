@@ -12,7 +12,7 @@ layout: '../../components/BlogPost.astro'
 上一篇讲解了 React 运行时两个关键阶段中的 **Render Phase**，所以这篇我们将来介绍 **Commit Phase**。
 
 ## 概览
-```js {1-2,4} title="fib.ex" showLineNumbers /palindrome/#v
+```js {9,16-17} title="fib.ex" showLineNumbers /palindrome/#v
 let a1;
 let a2;
 let a3;
@@ -29,7 +29,7 @@ let a3;
 执行 Commit Phase 的函数是 `CommitRoot`。
 
 
-```js {1,3-4} showLineNumbers
+```js {9, 16-17} title="facebook/react/packages/react-reconciler/src/ReactFiberWorkLoop.js" showLineNumbers
 // facebook/react/packages/react-reconciler/src/ReactFiberWorkLoop.js
 function commitRoot(root: FiberRoot, finishedWork: null | Fiber, lanes: Lanes){
   if (subtreeHasBeforeMutationEffects || rootHasBeforeMutationEffect) {
@@ -81,7 +81,7 @@ Commit phase 可以分为**三个阶段**，对应上图中的方法 1、2、3�
 
 ### 1.1 - beforeMutation入口: `commitBeforeMutationEffects`
 
-```js
+```js showLineNumbers title="facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js"
 //facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
 
 export function commitBeforeMutationEffects(
@@ -113,7 +113,7 @@ export function commitBeforeMutationEffects(
 
 ### 1.2 - beforeMutation向下递: `commitBeforeMutationEffects_begin`
 
-```js
+```js showLineNumbers title="facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js"
 //facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
 
 function commitBeforeMutationEffects_begin(isViewTransitionEligible: boolean) {
@@ -150,7 +150,7 @@ function commitBeforeMutationEffects_begin(isViewTransitionEligible: boolean) {
 
 ### 1.3 - beforeMutationd向上归: `commitBeforeMutationEffects_complete`
 
-```js
+```js showLineNumbers  title="facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js"
 // facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
 function commitBeforeMutationEffects_complete(
   isViewTransitionEligible: boolean,
@@ -179,7 +179,7 @@ function commitBeforeMutationEffects_complete(
 
 ### 1.4 - 每个节点如何执行： `commitBeforeMutationEffectsOnFiber`
 
-```js
+```js showLineNumbers  title="facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js"
 // facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
 function commitBeforeMutationEffectsOnFiber(
   finishedWork: Fiber,

@@ -7,6 +7,7 @@ import BlurText from '@/components/BlurText';
 import EducationCard from '@/components/EducationCard.astro';
 import { SkillLoop } from '@/components/SkiilLoop';
 import SkillCard, {  type Props as SkillCardProps } from '@/components/SkillCard.astro';
+import { SITE_TITLE } from '@/consts';
 import BasicLayout from '@/layouts/BasicLayout.astro';
 
 const handleAnimationComplete = () => {
@@ -92,7 +93,10 @@ const introduction =
   "Hi, I'm Shengtong Jin from China. I hold a Master's degree in Computer Science from the University of Southern California. I'm a front-end developer, and outside of work, I enjoy playing video games, watching movies, and staying updated on the latest tech trends.";
 ---
 
-<BasicLayout>
+<BasicLayout
+  title={`关于我 | ${SITE_TITLE}`}
+  description="Shengtong Jin — 南加州大学计算机硕士，专注前端开发的技术博主。了解我的教育背景、技术栈与项目经历。"
+>
   <!-- page container -->
   <div class="min-h-dvh flex flex-col items-center overflow-hidden w-full">
     <!-- about me section -->

@@ -1,6 +1,7 @@
 ---
-import Layout from '@/layouts/BasicLayout.astro';
 import ProjectCard from '@/components/ProjectCard.astro';
+import { SITE_TITLE } from '@/consts';
+import Layout from '@/layouts/BasicLayout.astro';
 
 const projects = [
   {
@@ -36,7 +37,10 @@ const projects = [
 ];
 ---
 
-<Layout>
+<Layout
+  title={`项目展示 | ${SITE_TITLE}`}
+  description="个人开发项目展示：PdfLite PDF 在线工具、Astro 博客、UI 组件库等前端项目与实验。"
+>
   <section class="mx-auto max-w-6xl px-4 pt-30 py-10 md:pt-30">
     <div class="flex flex-col gap-3 mb-8 md:mb-10">
       <p class="text-sm font-semibold uppercase tracking-[0.2em] text-muted-foreground">Projects</p>

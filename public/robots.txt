@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://sjin66.github.io/my-astro-blog/sitemap-index.xml

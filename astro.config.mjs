@@ -18,6 +18,9 @@ export default defineConfig({
         rehypePrettyCode,
         {
           theme: { light: 'catppuccin-mocha', dark: 'ayu-dark' },
+          // defaultLang: 'plaintext',
+          // keepBackground: true,
+          grid: true,
           transformers: [
             transformerCopyButton({
               visibility: 'hover',
