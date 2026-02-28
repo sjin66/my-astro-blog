@@ -21,8 +21,7 @@ Fiber 树可以说是 React 内部最重要的一种数据结构了，它帮助 
 
 下面是 Fiber 节点构造函数的源码：
 
-```js
-// facebook/react/blob/main/packages/react-reconciler/src/ReactFiber.js#L136-L209
+```js title="packages/react-reconciler/src/ReactFiber.js"
 function FiberNode(
   this: $FlowFixMe,
   tag: WorkTag,
@@ -73,7 +72,8 @@ function FiberNode(
 
 Fiber 节点通过自身的 `child`、`sibling` 以及 `return` 指针构建了一个树结构。并通过自身的 `alternate` 指针，指向 **current tree** 或 **workInProgress tree** 中的对应 Fiber 节点， 实现了如下图所示的**双缓冲树**的架构。
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/cde88f029600479c9b14fec000e85a7f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1764862504&x-orig-sign=WstnI5lnWoat2YFPRNkOVw%2FB0P4%3D)
+
+![Fiber Tree](../../assets/blog/react-data-structure/fiber-tree.webp)
 
 ## Hook 链表
 
@@ -83,8 +83,7 @@ Fiber 节点通过自身的 `child`、`sibling` 以及 `return` 指针构建了�
 
 首次渲染时，React 会为每个调用的 hook 创建一个 **Hook 对象**，并用通过 `next` 指针串起来。之后的更新渲染，React 并不会“看代码里的变量名”，而是严格**按调用顺序**一个个取 Hook 对象。
 
-```js
-// [ReactFiberHooks.js - facebook/react - GitHub1s](https://github1s.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberHooks.js#L195-L201)
+```js title="packages/react-reconciler/src/ReactFiberHooks.js"
 export type Hook = {
   memoizedState: any,
   baseState: any,
@@ -94,7 +93,7 @@ export type Hook = {
 };
 ```
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/64130625c816478195da4a3b93864149~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1764862504&x-orig-sign=SmfRWf1jROAbXcLrWIBqwvo2thg%3D)
+![image.png](../../assets/blog/react-data-structure/hook-linked-list.webp)
 
 ## Update Queue
 
@@ -110,8 +109,7 @@ export type Hook = {
 
 下面为 `hook.queue` 相关的类型定义源码：
 
-```js
-// [ReactFiberHooks.js - facebook/react - GitHub1s](https://github1s.com/facebook/react/blob/main/packages/react-reconciler/src/ReactFiberHooks.js#L165-L181)
+```js title="packages/react-reconciler/src/ReactFiberHooks.js"
 export type Update<S, A> = {
   lane: Lane,
   revertLane: Lane,
@@ -131,17 +129,17 @@ export type UpdateQueue<S, A> = {
 };
 ```
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/f7e39db23ad5435c88a46a2627391561~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1764862504&x-orig-sign=WXe%2BC%2F9kHWor38TVYO0MfN35doo%3D)
+![image.png](../../assets/blog/react-data-structure/update-queue.webp)
 
 当调用：
 
-```js
+```js title=" "
 setCount(c => c + 1);
 ```
 
 React 内部会创建一个 `update` 对象：
 
-```js
+```js title="packages/react-reconciler/src/ReactFiberHooks.js"
 const update = {
   action: c => c + 1,
   next: null,
@@ -153,7 +151,7 @@ const update = {
 *   每个 `hook`（比如 `useState`）都有一个 `queue`，
 *   `queue.pending` 存的是一个 **环形链表（circular linked list）**，保存所有待处理的更新（`update` 对象）。
 
-```js
+```js title="packages/react-reconciler/src/ReactFiberHooks.js"
 const pending = hook.queue.pending;
 if (pending === null) {
   update.next = update; // 第一个节点，自己形成环
@@ -166,7 +164,7 @@ hook.queue.pending = update; // 更新尾节点
 
 在下一次 render 阶段，遍历并执行一个 hook（useState/useReducer）上积累的所有更新（update 对象），计算出新的 state 值：
 
-```js
+```js title="packages/react-reconciler/src/ReactFiberHooks.js"
 function processUpdateQueue(hook, queue, reducer) {
   let newState = hook.memoizedState;
   let pending = queue.pending;

@@ -37,15 +37,14 @@ LCS 的动态规划解法在最坏情况下复杂度是 **O(n²)** ，嵌套子�
 
 diff 算法的具体调用栈如下图所示：
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/6ac3a86447fe4bfa8e6a6bd39c0dfe50~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763395258&x-orig-sign=oaBuB2e60Y71utIWy%2BRrrgEpQ0I%3D)
+![image.png](../../assets/blog/react-diff/diff-call-stack.webp)
 
 从上图可以看出 React 的 diff 算法 是发生在 Render Phase 的 `beginWork` 子阶段中。
 通过调用 `reconcileChildren` 方法 和 `reconcileChildFiber`方法，根据 children 的不同类型来执行不同的 diff 操作。
 
 下面为简化后的`reconcileChildFiber`源码, 如果想阅读完整源码，可以访问首行注释的地址。
 
-```js
-// https://github1s.com/facebook/react/blob/main/packages/react-reconciler/src/ReactChildFiber.js
+```js title="packages/react-reconciler/src/ReactChildFiber.js"
 function reconcileChildFibers(returnFiber, currentFirstChild, newChild, lanes) {
   // This function is not recursive.
   // If the top level item is an array, we treat it as a set of children,
@@ -110,8 +109,7 @@ function reconcileChildFibers(returnFiber, currentFirstChild, newChild, lanes) {
 
 先来看下 `reconcileSingleElemt` 简化后的源码:
 
-```js
-// https://github1s.com/facebook/react/blob/main/packages/react-reconciler/src/ReactChildFiber.js
+```js title="packages/react-reconciler/src/ReactChildFiber.js"
 function reconcileSingleElement(returnFiber, currentFirstChild, element, lanes) {
   var key = element.key;
   var child = currentFirstChild;
@@ -206,8 +204,7 @@ function reconcileSingleElement(returnFiber, currentFirstChild, element, lanes) 
 
 先来看下简化后的源码：
 
-```js
-// https://github1s.com/facebook/react/blob/main/packages/react-reconciler/src/ReactChildFiber.js
+```js title="packages/react-reconciler/src/ReactChildFiber.js"
 function reconcileChildrenArray(returnFiber, currentFirstChild, newChildren, lanes) {
   let resultingFirstChild = null;
   let previousNewFiber = null;
@@ -345,7 +342,7 @@ function reconcileChildrenArray(returnFiber, currentFirstChild, newChildren, lan
 
 首先，会进入第一阶段-顺序对比阶段。该阶段会同时遍历 `oldFiber` 和 `newChildren`。此时 `oldFiber` 为 B， `newIdx`等于0。 因为type和key都一样，所以直接复用。
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/cf47760ced214e2a873d1fdb8c5ca6a9~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763395258&x-orig-sign=TvtE5Dy62ABfTn9r58%2BZLRvUG6w%3D)
+![image.png](../../assets/blog/react-diff/reconcile-children-1.webp)
 
 **第二步：** **key不一致，提前中断第一阶段**
 
@@ -353,17 +350,17 @@ B节点成功复用后， 第一阶段会继续循环。这时，**oldFiber** �
 
 但是由于 `key` 不一致，无法复用， `updateSlot` 最终返回 `null`。 导致第一阶段循环**提前中断**，并进入第三阶段- Map Diff阶段。
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/62cc5441b2ee4bb38e88e4cbf11ad7bd~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763395258&x-orig-sign=mxwRjiYEZcYQo%2FUoffe3ijFqkMw%3D)
+![image.png](../../assets/blog/react-diff/reconcile-children-2.webp)
 
 **第三步: 创建Map**
 
 第一阶段的 `for` 循环提前中断后，来到第三阶段。此时，会先创建一个 `existingChildren` map，并把剩余旧 fiber，C 和 D 存入 map， Map 的 key 为 fiber 的 key，value 则为 fiber对象本身。
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/7f2f9d70dc2d4268820f6378a8c862d3~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763395258&x-orig-sign=haZreOTaKKrxKsKNNQ95U2vuBWk%3D)
+![image.png](../../assets/blog/react-diff/reconcile-children-3.webp)
 
 **第四步：** **遍历剩余 newChildren，用 key 查 Map**
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/70cdf309582b401eb0f6a9cb6614c6c4~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763395258&x-orig-sign=xLTe%2FZcnTQKIkP4vqdrxUEbwDw4%3D)
+![image.png](../../assets/blog/react-diff/reconcile-children-4.webp)
 
 最后，遍历剩余 `newChildren`，并调用 `updateFromMap` 用 `key` 查 Map：
 如果命中则返回该fiber并复用。

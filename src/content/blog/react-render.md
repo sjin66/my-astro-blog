@@ -36,8 +36,7 @@ Render Phase 对应的函数为 `renderRootSync` 和 `renderRootConcurrent`。�
 
 我们先来看一下 `renderRootSync` 函数究竟做了什么。
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberWorkLoop.js
+```js title="packages/react-reconciler/src/ReactFiberWorkLoop.js"
 
 function renderRootSync(root, lanes){
     workLoopSync();
@@ -57,8 +56,7 @@ function renderRootSync(root, lanes){
 
 下面，我们来看一下 `workLoop` 的具体实现：
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberWorkLoop.js
+```js title="packages/react-reconciler/src/ReactFiberWorkLoop.js"
 
 // Legacy 模式
 function workLoopSync(){
@@ -90,7 +88,7 @@ function workLoopConcurrent(){
 
 `workLoop` 会循环调用 `performUnitOfWork` 来处理并更新每一个fiber节点
 
-```js
+```js title="packages/react-reconciler/src/ReactFiberWorkLoop.js"
 function performUnitOfWork(unitOfWork){
     // 递--向下调和
     let next = beginWork(current, unitOfWork, subtreeRenderLanes);
@@ -119,8 +117,7 @@ beginWork 方法会处理当前fiber节点并返回下一个节点。
 
 如果有下一个需要调和的节点，则返回该节点，如果没有，则返回null
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberBeginWork.js
+```js title="packages/react-reconciler/src/ReactFiberBeginWork.js"
 
 function beginWork(current, workInProgress, renderLanes) {
   // 第一阶段：判断是否需要更新组件
@@ -209,8 +206,7 @@ beginWork 可以分为两个阶段，阶段1 是用来判断 workInProgress 是�
 
 #### checkScheduledUpdateOrContext
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberBeginWork.js
+```js title="packages/react-reconciler/src/ReactFiberBeginWork.js"
 
 function checkScheduledUpdateOrContext(
   current: Fiber,
@@ -236,8 +232,7 @@ function checkScheduledUpdateOrContext(
 
 attemptEarlyBailoutIfNoScheduledUpdate 是 React 渲染优化中的关键逻辑，用于在特定条件下 提前终止 Fiber 节点的处理，避免不必要的计算。以下是对其核心逻辑的逐步分析：
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberBeginWork.js
+```js title="packages/react-reconciler/src/ReactFiberBeginWork.js"
 
 function bailoutOnAlreadyFinishedWork(
   current: Fiber | null,
@@ -269,8 +264,7 @@ function bailoutOnAlreadyFinishedWork(
 
 下面就以函数组件为例：
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberBeginWork.js
+```js title="packages/react-reconciler/src/ReactFiberBeginWork.js"
  // 核心更新逻辑（以函数组件为例）
 function updateFunctionComponent() {
   const nextChildren = renderWithHooks(current,workInProgress,Component,extProps,context);
@@ -334,14 +328,13 @@ export function reconcileChildren(
 
 下面通过一张 Flow Chart 来更直观的总结一下 `beginWork` 的流程：
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/9d9b3d68c3924a0e85826821f3bbb249~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763378578&x-orig-sign=C2bzqwjDjyM%2BlryJRqyK0qrywM8%3D)
+![image.png](../../assets/blog/render-phase/begin-work.webp)
 
 ## competeUnitOfWork
 
 在执行完 `beginWork` 的更新流程后，接下来会执行 `competeUnitOfWork`：
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberWorkLoop.js
+```js title="packages/react-reconciler/src/ReactFiberWorkLoop.js"
 function completeUnitOfWork(unitOfWork: Fiber): void {
   // Attempt to complete the current unit of work, then move to the next
   // sibling. If there `are` no more siblings, return to the parent fiber.
@@ -368,7 +361,7 @@ function completeUnitOfWork(unitOfWork: Fiber): void {
     // create dom, process prop and state update, trigger effects
     // return the new  spawned new work, such as side effect
     let next = completeWork(current, completedWork, entangledRenderLanes);
-    
+
     if (next !== null) {
       // Completing this fiber spawned new work. Work on that next.
       workInProgress = next;
@@ -414,9 +407,7 @@ function completeUnitOfWork(unitOfWork: Fiber): void {
 
 阅读 `completeWork` 源码会发现，它通过 switch case 对不同类型 tag 的 fiber 进行了不同的处理。所以，completeWork 的源码很长，有1000多行。但不论哪一种case，都会执行 bubbleProperties 函数。 这里就以 ClassComponent 和 HostComponent 为例：
 
-```js
-
-// react-reconciler/src/ReactFiberCompleteWork.js
+```js title="packages/react-reconciler/src/ReactFiberCompleteWork.js"
 
 function completeWork(
   current: Fiber | null,  // 旧的 Fiber 节点（更新时存在）
@@ -425,10 +416,10 @@ function completeWork(
 ): Fiber | null {
   const newProps = workInProgress.pendingProps;
   switch (workInProgress.tag) {
-  
-    case ClassComponent: { // 处理 Context、Ref 等逻辑 
+
+    case ClassComponent: { // 处理 Context、Ref 等逻辑
         bubbleProperties(workInProgress)
-        return null; 
+        return null;
     }
     // 处理普通 DOM 元素（如 div、span）
     case HostComponent: {
@@ -476,7 +467,7 @@ function completeWork(
 
 ## 案例分析
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/2291429add93423ba91f0c87b43b7cbf~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763378578&x-orig-sign=tfbZ7a4%2BzJ6hwzOqPvQt%2FYSR2M0%3D)
+![image.png](../../assets/blog/render-phase/examle.webp)
 
 ## 总结
 

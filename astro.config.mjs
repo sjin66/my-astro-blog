@@ -17,7 +17,7 @@ export default defineConfig({
       [
         rehypePrettyCode,
         {
-          theme: { light: 'catppuccin-mocha', dark: 'ayu-dark' },
+          theme: { light: 'catppuccin-latte', dark: 'catppuccin-mocha' },
           // defaultLang: 'plaintext',
           // keepBackground: true,
           grid: true,

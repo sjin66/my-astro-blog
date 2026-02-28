@@ -1383,7 +1383,7 @@ pre [data-line] {
 }
 
 [data-rehype-pretty-code-title] {
-  @apply bg-zinc-700 text-zinc-200 rounded-t-lg py-2 px-3 font-semibold text-sm;
+  @apply bg-secondary text-sidebar-foreground rounded-t-lg py-2 px-3 font-semibold text-sm border-b-2 border-border;
 }
 
 figcaption + pre {
@@ -1393,10 +1393,24 @@ figcaption + pre {
 figure {
     @apply mb-6 mt-1;
 }
+figure > pre {
+    @apply !py-0;
+}
+
 pre,
 code,
 figure {
   @apply overflow-x-auto px-2 py-1;
+}
+figure > pre {
+  background-color: #eef4fb !important;
+}
+figure > pre code,
+figure > pre code span {
+  background-color: #eef4fb !important;
+}
+.dark figure > pre {
+  @apply !bg-secondary;
 }
 /* p {
   @apply text-xl;

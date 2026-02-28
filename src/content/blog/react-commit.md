@@ -29,7 +29,7 @@ let a3;
 执行 Commit Phase 的函数是 `CommitRoot`。
 
 
-```js {9, 16-17} title="facebook/react/packages/react-reconciler/src/ReactFiberWorkLoop.js" showLineNumbers
+```js {9, 16-17} title="packages/react-reconciler/src/ReactFiberWorkLoop.js" showLineNumbers
 // facebook/react/packages/react-reconciler/src/ReactFiberWorkLoop.js
 function commitRoot(root: FiberRoot, finishedWork: null | Fiber, lanes: Lanes){
   if (subtreeHasBeforeMutationEffects || rootHasBeforeMutationEffect) {
@@ -81,7 +81,7 @@ Commit phase 可以分为**三个阶段**，对应上图中的方法 1、2、3�
 
 ### 1.1 - beforeMutation入口: `commitBeforeMutationEffects`
 
-```js showLineNumbers title="facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js"
+```js showLineNumbers title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 //facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
 
 export function commitBeforeMutationEffects(
@@ -113,7 +113,7 @@ export function commitBeforeMutationEffects(
 
 ### 1.2 - beforeMutation向下递: `commitBeforeMutationEffects_begin`
 
-```js showLineNumbers title="facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js"
+```js showLineNumbers title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 //facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
 
 function commitBeforeMutationEffects_begin(isViewTransitionEligible: boolean) {
@@ -150,7 +150,7 @@ function commitBeforeMutationEffects_begin(isViewTransitionEligible: boolean) {
 
 ### 1.3 - beforeMutationd向上归: `commitBeforeMutationEffects_complete`
 
-```js showLineNumbers  title="facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js"
+```js showLineNumbers  title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 // facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
 function commitBeforeMutationEffects_complete(
   isViewTransitionEligible: boolean,
@@ -179,7 +179,7 @@ function commitBeforeMutationEffects_complete(
 
 ### 1.4 - 每个节点如何执行： `commitBeforeMutationEffectsOnFiber`
 
-```js showLineNumbers  title="facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js"
+```js showLineNumbers  title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 // facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
 function commitBeforeMutationEffectsOnFiber(
   finishedWork: Fiber,
@@ -288,8 +288,7 @@ Mutation 阶段 = 深度优先 + 先删后子树再本节点；在这个阶段�
 
 在 `commitMutationEffects` 方法中，调用了 `commitMutationEffectsOnFiber` 函数， 来处理每一个有 mutationEffect flag 的 fiber。
 
-```ts
-// facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
+```ts title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 export function commitMutationEffects(
   root: FiberRoot,
   finishedWork: Fiber,
@@ -327,8 +326,7 @@ export function commitMutationEffects(
 
 `commitMutationEffectsOnFiber`在递归之后立刻完成本节点所有 mutation 工作（包括 Reconciliation、副作用以及 Ref 的 attach/detach
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
+```js title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 function commitMutationEffectsOnFiber(
   finishedWork: Fiber,
   root: FiberRoot,
@@ -395,7 +393,7 @@ function commitMutationEffectsOnFiber(
 
 **例子1：**
 
-```mermaid
+```mermaid title=" "
 flowchart TD
   %% Q.deletions = [X]
   P["P"]
@@ -435,8 +433,7 @@ flowchart TD
 
 所以，`recursivelyTraverseMutationEffects` 中可以通过遍历 fiber 的 `deletions`，调用 `commitDeletionEffects` 删除它的子节点。
 
-```js
-// facebook/react/packages/react-reconciler/src/ReactFiberCommitWork.js
+```js title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 function recursivelyTraverseMutationEffects(
   root: FiberRoot,
   parentFiber: Fiber,
@@ -476,8 +473,7 @@ function recursivelyTraverseMutationEffects(
 
 ### 3.1 - Layout入口函数：commitLayoutEffects
 
-```js
-// facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js
+```js title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 export function commitLayoutEffects(
   finishedWork: Fiber,
   root: FiberRoot,
@@ -500,8 +496,7 @@ Layout 阶段的流程和 Mutation 阶段差不多，都会调用 `commitXxxEffe
 
 ### 3.2 - 每个节点如何执行: commitLayoutEffectOnFiber
 
-```js
-// facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js
+```js title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 
 function commitLayoutEffectOnFiber(
   finishedRoot: FiberRoot,
@@ -573,33 +568,32 @@ function commitLayoutEffectOnFiber(
 
 *   **函数组件**：
     1.  **挂载useLayoutEffect**:
-        ```js
+        ```js title=" "
         commitHookLayoutEffects(finishedWork, HookLayout | HookHasEffect);
         ```
         *   调用 `commitHookLayoutEffects`，重新挂载在 Mutation 阶段清理掉的 `useLayoutEffect`
 *   **类组件**：
     1.  **布局生命周期**:
-        ```js
+        ```js title=" "
         commitClassLayoutLifecycles(finishedWork, current)
         ```
         *   **首挂载**：`componentDidMount()`
         *   **更新**：`componentDidUpdate(prevProps, prevState, snapshot)`\
             其中 `snapshot` 来源于 **before-mutation** 阶段的 `getSnapshotBeforeUpdate`。
     2.  **setState 回调**:
-        ```js
+        ```js title=" "
         commitClassCallbacks(finishedWork);
         ```
         *   调用通过 `setState(updater, callback)` 注册的 **callback**。
     3.  **挂载/更新 ref（attach）**:\*\* \*\*
-        ```js
+        ```js title=" "
         safelyAttachRef(finishedWork, finishedWork.return);
         ```
         *   在 **mutation 阶段**旧 ref 已 **detach**；此处把 `ref` 指向 **类实例**
 
 ### 3.3 - recursivelyTraverseLayoutEffects
 
-```js
-// facebook/react/blob/main/packages/react-reconciler/src/ReactFiberCommitWork.js
+```js title="packages/react-reconciler/src/ReactFiberCommitWork.js"
 
 function recursivelyTraverseLayoutEffects(
   root: FiberRoot,

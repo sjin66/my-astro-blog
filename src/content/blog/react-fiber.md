@@ -20,7 +20,7 @@ tag: 'React'
 
 下面是一段简单的React代码：
 
-```jsx
+```jsx title=" "
 <div className={'container'}>
     Hello， World!
 </div>
@@ -28,7 +28,7 @@ tag: 'React'
 
 经过Babel编译后会变成下面代码：
 
-```js
+```js title=" "
 // 旧版本Bable
 React.createElement('h1', { className: 'container' }, 'Hello， World!');
 
@@ -42,7 +42,7 @@ import { jsx as _jsx } from "react/jsx-runtime";
 
 上面这段代码最终会返回一个JavaScript对象，用来描述DOM树的结构，这就可以被理解为虚拟DOM：
 
-```js
+```js title=" "
 {
   type: 'div',
   props: {
@@ -83,8 +83,7 @@ React 团队花费了两年的时间重构了fiber架构，用来解决React的�
 
 下面直接附上 Fiber 构造函数的源码：
 
-```js
-// facebook/react/blob/main/packages/react-reconciler/src/ReactFiber.js#L136-L209
+```js title="packages/react-reconciler/src/ReactFiber.js"
 function FiberNode(
   this: $FlowFixMe,
   tag: WorkTag,
@@ -95,11 +94,11 @@ function FiberNode(
   // Instance
   this.tag = tag; // fiber 类型
   this.key = key; // 用于调和子节点
-  this.elementType = null; 
+  this.elementType = null;
   this.type = null; // 元素类型
   this.stateNode = null; // 对应的真实 DOM 元素
 
-  // Fiber 链表结构 
+  // Fiber 链表结构
   this.return = null; // 指向父节点（父节点）
   this.child = null;  // 指向第一个子节点（子节点）
   this.sibling = null; // 指向下一个兄弟节点（兄弟节点）
@@ -114,7 +113,7 @@ function FiberNode(
   this.updateQueue = null;          // 状态更新队列，存储 setState 产生的更新对象
   this.memoizedState = null;        // 上一次渲染时使用的 state
   this.dependencies = null;         // 当前 Fiber 所依赖的上下文（Context）、事件订阅等
-  
+
   this.mode = mode;
 
   // Effects
@@ -122,7 +121,7 @@ function FiberNode(
   this.subtreeFlags = NoFlags;  // 子节点树中需要执行的副作用（用于性能优化）
   this.deletions = null;        // 待删除的子 Fiber 节点数组（用于记录需要被删除的节点）
 
-  // Lane 模型（优先级调度） 
+  // Lane 模型（优先级调度）
   // React 17+ 使用的优先级调度模型，用于并发渲染
   this.lanes = NoLanes;        // 当前 Fiber 上待处理的更新优先级车道
   this.childLanes = NoLanes;   // 子节点树中待处理的更新优先级车道
@@ -141,7 +140,7 @@ function FiberNode(
 
 通过 FiberNode 构造函数我们了解到，fiber 通过 `return`，`child` 以及 `sibling` 属性来构建链表结构，那么我们来看一下下面这段代码生成的Fiber Tree 是什么样子的。
 
-```jsx
+```jsx title=" "
 function MyComponent() {
     return (
         <div>
@@ -153,7 +152,7 @@ function MyComponent() {
 }
 ```
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/548eb0c8d559490d9428a004852a0f9f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763393511&x-orig-sign=QaiWPhiAuE5zDIiLXm%2BzUIFIq%2Fs%3D)
+![image.png](../../assets/blog/react-fiber/fiber-tree.webp)
 
 return 表示指向父节点， child 表示指向第一个子节点， sibling 则指向兄弟节点。 所以我们就构建出了如上图所示的 Fiber Tree。
 
@@ -165,9 +164,9 @@ Fiber Tree 的构建可以分为初始化和更新。我们先从初始化开始
 
 React 开发者对下面这段代码肯定再熟悉不过了， `createRoot()` 就是 **concurrent** 模式下创建 React 应用程序的入口函数。
 
-```jsx
-import { createRoot } from 'react-dom/client';  
-const domNode = document.getElementById('root');  
+```jsx title=" "
+import { createRoot } from 'react-dom/client';
+const domNode = document.getElementById('root');
 const root = createRoot(domNode);
 root.render(<App/>)
 ```
@@ -178,8 +177,7 @@ root.render(<App/>)
 
 下面是 `createRoot()` 的关键源码：
 
-```js
-// facebook/react/blob/main/packages/react-dom/src/client/ReactDOMRoot.js
+```js title="packages/react-dom/src/client/ReactDOMRoot.js"
 export function createRoot(container，options): RootType {
  if (!isValidContainer(container)) {
    throw new Error('Target container is not a DOM element.');
@@ -201,8 +199,7 @@ export function createRoot(container，options): RootType {
 
 从上面源码中可以看出，在 `createRoot()` 函数中， 调用了 `createContainer()` 方法。下面，我们通过源码来看一下 `createContainer()` 究竟是做什么的。
 
-```js
-// /facebook/react/blob/main/packages/react-reconciler/src/ReactFiberReconciler.js
+```js title="packages/react-reconciler/src/ReactFiberReconciler.js"
 export function createContainer(
   containerInfo: Container,
   tag: RootTag,
@@ -217,8 +214,7 @@ export function createContainer(
 
 `createContainer()` 方法很简单，就是直接调用了 `createFiberRoot()` 函数：
 
-```js
-//facebook/react/blob/main/packages/react-reconciler/src/ReactFiberRoot.js
+```js title="packages/react-reconciler/src/ReactFiberRoot.js"
 export function createFiberRoot(
   containerInfo: Container,
   tag: RootTag
@@ -232,7 +228,7 @@ export function createFiberRoot(
   const uninitializedFiber = createHostRootFiber(tag, isStrictMode);
   root.current = uninitializedFiber;
   uninitializedFiber.stateNode = root;
-  
+
   const initialState: RootState = {
     element: initialChildren,
     isDehydrated: hydrate,
@@ -250,7 +246,7 @@ export function createFiberRoot(
 
 `createRoot` 最终会生成如下的 fiber 结构：
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/5f1031e00d564cfc9978d7ed69ebfd40~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763393511&x-orig-sign=2sfQaujqFSEQvz6MnX0jzFJPFN8%3D)
+![image.png](../../assets/blog/react-fiber/create-root.webp)
 
 这是一个 双向环形链接 结构，`Root` 为根对象， `RootElement` 则为 **Current Tree** 的根节点。他们之间通过 `current` 和 `stateNode` 指针关联。
 
@@ -276,8 +272,7 @@ React 内部其实维护着两颗Fiber Tree， 分别是 **Current Tree** 和 **
 
 具体在 prepareFreshStack 函数中，会调用 createWorkInProgress 来为 `hostRootFiber` 创建 `workInprogress` 节点：
 
-```js
-// /facebook/react/blob/main/packages/react-reconciler/src/ReactFiberWorkLoop.js
+```js title="packages/react-reconciler/src/ReactFiberWorkLoop.js"
 function prepareFreshStack(root: FiberRoot, lanes: Lanes): Fiber {
 ...
 const rootWorkInProgress = createWorkInProgress(root.current, null);
@@ -287,7 +282,7 @@ const rootWorkInProgress = createWorkInProgress(root.current, null);
 
 下面这段源码会创建一个fiber作为WIP 并通过alternate指针关联 currentTree 和 WIP tree。
 
-```js
+```js title="packages/react-reconciler/src/ReactFiber.js"
 // This is used to create an alternate fiber to do work on.
 export function createWorkInProgress(current: Fiber, pendingProps: any): Fiber {
   let workInProgress = current.alternate;
@@ -327,19 +322,19 @@ export function createWorkInProgress(current: Fiber, pendingProps: any): Fiber {
 }
 ```
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/36f9173b2c464785a36b12584ed42f5f~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763393511&x-orig-sign=nhOCK7Sa0uLHq1VjlVq0kErFiI0%3D)
+![image.png](../../assets/blog/react-fiber/two-buffer-tree.webp)
 
 在 Render Phase， 会通过 `beginWork` 和 `completeWork` 循环对 **workInProgress** 树上的 fiber节点 进行**深度优先遍历**。为了方便追踪正在处理的 fiber，react 内部维护了一个 workInProgress 指针，永远指向正在更新的 WIP tree 上的 fiber。
 
 所以，当Render Phase 处理到 App 对应的 Fiber 节点时，`workInProgress` 会指向 App。如下图所示：
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/4f22c5375afe407ca5b995c66b325d4e~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763393511&x-orig-sign=rVPDfPjxYZwbBrUHxvNIVHkRUI8%3D)
+![image.png](../../assets/blog/react-fiber/two-buffer-tree-2.webp)
 
 当 Render phase 执行完毕后， 新的 WIP tree 的构建工作就完成了。 接下来会进入 Commit Phase，并根据 Render Phase 中给 fiber 标记的不同 flags 来对真实 DOM 进行对应的操作。 当这两个阶段都完成后，FiberRootNode 会将 current 从指向 旧的 Current Tree 变更为指向新的 WIP tree。
 通俗的讲，可以理解为 current tree 和 WIP tree 进行了互换。
 如下图所示：
 
-![image.png](https://p0-xtjj-private.juejin.cn/tos-cn-i-73owjymdk6/f5ff234a89ea4a4cbaf2cac8f8888e4a~tplv-73owjymdk6-jj-mark-v1:0:0:0:0:5o6Y6YeR5oqA5pyv56S-5Yy6IEAgc2ppbg==:q75.awebp?policy=eyJ2bSI6MywidWlkIjoiMzY1MzAxNjg1MDgwMDY5MiJ9&rk3s=f64ab15b&x-orig-authkey=f32326d3454f2ac7e96d3d06cdbb035152127018&x-orig-expires=1763393511&x-orig-sign=Oj6GVKWqpK0p0xFKuuMTUs8G10g%3D)
+![image.png](../../assets/blog/react-fiber/two-bufffer-tree-3.webp)
 
 至此，fiber tree 的**双缓存工作**就完成了。
 
